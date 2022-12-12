@@ -1,0 +1,7 @@
+---
+- name: Placeholder
+  become: true
+  hosts: localhost
+  tasks:
+    - name: Echo hello
+      shell: echo "Hello from ansible" > /root/hello.txt
