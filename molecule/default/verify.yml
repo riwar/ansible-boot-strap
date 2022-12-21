@@ -1,0 +1,39 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: Check that user admin exsists
+    file:
+      path: "/home/admin/"
+      state: directory
+  
+  - name: Check admin pub ssh-key exists
+    shell: cat /home/admin/.ssh/authorized_keys | xargs
+    register: authkey_out
+    changed_when: false
+  
+  - debug:
+      var: authkey_out
+
+  - name: Check that admin pub key is correct
+    assert:
+      that:
+        - authkey_out.stdout == "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA3EeiZ9ENEWIexUmK6cFNEkMWOEJJNVY6U6qysFhc0f"
+
+  - name: Check that admin can run become sudo
+    shell: sudo whoami
+    become: true
+    become_user: donald-ssh
+    register: whoami_out
+    changed_when: false
+  
+  - name: Check that admin became root
+    assert:
+      that:
+        - whoami_out.stdout == "root"
+
+    
+  

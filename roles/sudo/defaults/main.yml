@@ -1,0 +1,13 @@
+---
+# Default configuration options for the default sudoers template
+ansible_bs_sudoers_include_dir: /etc/sudoers.d
+ansible_bs_sudoers_include: true
+
+ansbile_bs_secure_path: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ansbile_bs_sudo_groups:
+  - name: sudo
+    access: "ALL=(ALL:ALL) NOPASSWD: ALL"
+  - name: wheel
+    access: "ALL=(ALL:ALL) NOPASSWD: ALL"
+
+ansible_bs_sudo_sudoers: default_sudoers.j2

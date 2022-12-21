@@ -1,0 +1,19 @@
+---
+# tasks file for users
+- name: Add users
+  user:
+    name: "{{ item.user }}"
+    shell: "{{ item.shell }}"
+    state: "{{ item.state | default('present') }}"
+    groups: "{{ item.groups | default('') }}"
+    append: yes
+  loop: "{{ ansible_bs_users }}"
+  when: ansible_bs_users is defined
+
+- name: Add users ssh_key
+  ansible.posix.authorized_key:
+    user: "{{ item.user }}"
+    state: "{{ item.state | default('present') }}"
+    key: "{{ item.pub_ssh_key }}"
+  loop: "{{ ansible_bs_users }}"
+  when: ansible_bs_users is defined

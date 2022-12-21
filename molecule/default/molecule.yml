@@ -1,0 +1,22 @@
+---
+driver:
+  name: docker 
+platforms:
+  - name: RedHat-9
+    image: ubi9/ubi-init
+    pre_build_image: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    command: "/usr/sbin/init"
+  - name: Ubuntu-2204
+    image: "geerlingguy/docker-ubuntu2204-ansible"
+    pre_build_image: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    command: "/usr/bin/systemd"
+provisioner:
+  name: ansible
+verifier:
+  name: ansible

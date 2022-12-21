@@ -1,0 +1,37 @@
+---
+# Not all podman containers have SSH installed
+- name: Prep Containers
+  hosts: all
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
+      failed_when: false
+
+    - name: Install SSH server, and client
+      package:
+        name: 
+          - openssh-*
+    
+    - name: Run SSH
+      file:
+        state: directory
+        path: /run/sshd
+
+
+- ansible.builtin.import_playbook: ../../boot-strap.yml
+  vars:
+    ansible_bs_sudo_groups:
+      - name: wheel
+      - name: sudo
+    ansible_bs_users:
+      - user: admin
+        shell: /bin/bash
+        pub_ssh_key: |
+          ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA3EeiZ9ENEWIexUmK6cFNEkMWOEJJNVY6U6qysFhc0f
+        groups: 
+          - wheel
+          - sudo
+
+

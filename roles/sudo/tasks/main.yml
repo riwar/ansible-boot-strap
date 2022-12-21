@@ -1,0 +1,22 @@
+---
+# tasks file for sudo
+- ansible.builtin.include_tasks: ../get_os_vars.yml
+
+- name: Make sure that sudo is installed
+  package: 
+    name: "{{ ansible_bs_sudo_packages }}"
+    state: present
+
+- name: Configure /etc/sudoers 
+  template:
+    src: "{{ ansible_bs_sudo_sudoers }}"
+    dest: "/etc/sudoers"
+    validate: visudo -cf %s
+  when: ansible_bs_sudo_sudoers is defined
+  
+- name: Add sudo groups
+  group: 
+    name: "{{ item.name }}"
+    state: "{{ item.state | default('present') }}"
+  when: ansible_bs_sudo_groups is defined
+  loop: "{{ ansible_bs_sudo_groups }}"

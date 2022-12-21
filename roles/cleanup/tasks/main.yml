@@ -1,0 +1,20 @@
+---
+# Should only be itek, but will future prof
+- name: Remove Installation user from image
+  user:
+    name: "{{ item }}"
+    state: absent
+    remove: true
+  loop: ansbile_bs_remove_users
+
+# Remove swap
+- block:
+  - name: Disable any active swaps
+    command: swapoff -a
+
+  - name: Remove any swap configuration from fstab
+    ansible.builtin.lineinfile:
+      path: /etc/fstab
+      state: absent
+      regexp: 'swap'
+  when: ansible_swaptotal_mb != 0

@@ -1,0 +1,7 @@
+- name: BootStrap Linux OS
+  hosts: all
+  roles:
+    - name: sudo
+    - name: users
+    - name: devsec.hardening.ssh_hardening
+  

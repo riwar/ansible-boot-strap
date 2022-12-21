@@ -1,0 +1,24 @@
+
+Defaults	env_reset
+Defaults	mail_badpass
+Defaults	secure_path="{{ ansbile_bs_secure_path }}"
+Defaults	use_pty
+
+{% if ansible_bs_env_keep is defined %}
+{% for env_vars in ansbile_bs_env_keep %}
+%sudo env_keep += "{{ env_vars }}"
+{% endfor %}
+{% endif %}
+
+# User privilege specification
+root	ALL=(ALL:ALL) ALL
+
+{% for group in ansbile_bs_sudo_groups %}
+%{{group.name}} {{group.access}}
+{% endfor %}
+
+# See sudoers(5) for more information on "@include" directives:
+
+{% if ansible_bs_sudoers_include %}
+@includedir {{ ansible_bs_sudoers_include_dir }}
+{% endif %}
